@@ -1,5 +1,14 @@
 import React from "react";
-import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import {
+  FaEnvelope,
+  FaFacebookF,
+  FaInstagram,
+  FaMapMarkerAlt,
+  FaMapPin,
+  FaPhoneAlt,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa6";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -10,7 +19,45 @@ export default function Footer() {
       {/* main footer  */}
       <div className="bg-[#010F1C]">
         <div className="container mx-auto px-3 py-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+          {/* address email and call section  */}
+          <div className="bg-[#FC791A] rounded-xl p-10 grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div className="flex items-center gap-5">
+              <span className="bg-white p-3 rounded-full text-[#FC791A]">
+                <FaMapMarkerAlt />
+              </span>
+              <div>
+                <h4 className="text-white">Address</h4>
+                <p className="text-2xl text-white font-semibold">
+                  4648 Rocky Road Philadelphia
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-5">
+              <span className="bg-white p-3 rounded-full text-[#FC791A]">
+                <FaEnvelope />
+              </span>
+              <div>
+                <h4 className="text-white">Send Email</h4>
+                <p className="text-2xl text-white font-semibold">
+                  help@bistroboss.com
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-5">
+              <span className="bg-white p-3 rounded-full text-[#FC791A]">
+                <FaPhoneAlt />
+              </span>
+              <div>
+                <h4 className="text-white">Call Emergency</h4>
+                <p className="text-2xl text-white font-semibold">
+                  +88017 12345678
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* footer links and social linsk section  */}
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
             <div className="lg:col-span-2">
               <img
                 src="https://gramentheme.com/html/fresheat/assets/img/logo/logoWhite.svg"
