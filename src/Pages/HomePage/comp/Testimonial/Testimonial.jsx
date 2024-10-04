@@ -7,6 +7,9 @@ import "swiper/css/navigation";
 
 import { Navigation } from "swiper/modules";
 
+import { Rating } from "@smastrom/react-rating";
+import "@smastrom/react-rating/style.css";
+
 export default function Testimonial() {
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
@@ -16,12 +19,12 @@ export default function Testimonial() {
   }, []);
   return (
     <div className="bg-[#181818]">
-      <div className="container mx-auto py-20">
+      <div className="container mx-auto py-32">
         <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
           {reviews?.map((review) => (
             <SwiperSlide key={review._id}>
-              <div className="max-w-[600px] p-5 bg-white rounded-2xl">
-                <div className="flex gap-5">
+              <div className="p-10 bg-white rounded-2xl">
+                <div className="flex items-center gap-5">
                   <img
                     src="https://gramentheme.com/html/fresheat/assets/img/testimonial/testimonialProfile1_1.png"
                     alt=""
@@ -32,7 +35,13 @@ export default function Testimonial() {
                       {review.name}
                     </h3>
                     <p>Full Stack Developer</p>
-                    <p>{review.rating}</p>
+                    <p className="">
+                      <Rating
+                        style={{ maxWidth: 100 }}
+                        value={review.rating}
+                        readOnly
+                      />
+                    </p>
                   </div>
                 </div>
                 <p className="mt-5 text-gray-500">{review.details}</p>
