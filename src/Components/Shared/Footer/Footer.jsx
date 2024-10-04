@@ -4,7 +4,6 @@ import {
   FaFacebookF,
   FaInstagram,
   FaMapMarkerAlt,
-  FaMapPin,
   FaPhoneAlt,
   FaTwitter,
   FaYoutube,
@@ -15,7 +14,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <div>
+    <div className="relative">
       {/* main footer  */}
       <div className="bg-[#010F1C]">
         <div className="container mx-auto px-3 py-20">
@@ -270,6 +269,34 @@ export default function Footer() {
             </ul>
           </div>
         </div>
+      </div>
+
+      {/* extra asset for atteractive design  */}
+      <div>
+        <img
+          className="absolute bottom-20 left-0 animate-pulse hidden lg:flex w-[120px]"
+          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_1.png"
+          alt=""
+          draggable="false"
+        />
+        <img
+          className="absolute top-0 right-0 hidden lg:flex w-[150px]"
+          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_4.png"
+          alt=""
+          draggable="false"
+        />
+        <img
+          className="absolute bottom-0 left-0 hidden lg:flex"
+          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_2.png"
+          alt=""
+          draggable="false"
+        />
+        <img
+          className="absolute top-0 right-0 rotate-180 hidden lg:flex"
+          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_2.png"
+          alt=""
+          draggable="false"
+        />
       </div>
     </div>
   );
