@@ -7,7 +7,7 @@ export default function MenuCard({ menu }) {
   return (
     <div
       key={menu._id}
-      className="relative bg-white rounded-2xl p-5 duration-300 group overflow-hidden"
+      className="bg-gradient-to-b from-transparent to-white relative rounded-2xl p-5 duration-300 group overflow-hidden"
     >
       {/* Background image on hover */}
       <div className="absolute inset-0 bg-no-repeat bg-center bg-cover opacity-0 group-hover:opacity-100 group-hover:bg-[url('https://gramentheme.com/html/fresheat/assets/img/bg/dishesThumbBG.png')] transition-opacity duration-500"></div>
