@@ -3,6 +3,7 @@ import Banner from "./comp/Banner/Banner";
 import Category from "./comp/Category/Category";
 import PopularFood from "./comp/PopularFood/PopularFood";
 import PopularMenu from "./comp/PopularMenu/PopularMenu";
+import Testimonial from "./comp/Testimonial/Testimonial";
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
       <PopularFood />
       <Category />
       <PopularMenu />
+      <Testimonial />
     </div>
   );
 }
