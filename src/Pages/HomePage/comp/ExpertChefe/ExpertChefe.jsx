@@ -38,9 +38,16 @@ export default function ExpertChefe() {
 
       <div className="pt-14 container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         {chefes.map((chefe) => (
-          <div key={chefe.id}>
-            <img src={chefe.image} alt={chefe.name} className="max-w-[250px] mx-auto" />
-            <div className="bg-white px-14 pt-32 pb-14 text-center rounded-t-[110px] -mt-24">
+          <div
+            key={chefe.id}
+            className="bg-gradient-to-b from-transparent to-white pb-10"
+          >
+            <img
+              src={chefe.image}
+              alt={chefe.name}
+              className="max-w-[250px] mx-auto"
+            />
+            <div className="pt-10 space-y-2 text-center">
               <h3 className="text-2xl font-bold">{chefe.name}</h3>
               <p className="text-gray-600">{chefe.role}</p>
             </div>
