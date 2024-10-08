@@ -119,7 +119,7 @@ export default function RegisterPage() {
               <input
                 type="submit"
                 value="Sign Up"
-                className="text-center w-full bg-red-600 py-3 text-white rounded cursor-pointer hover:bg-red-700 transition duration-300"
+                className="text-center w-full bg-[#D1A054] py-3 text-white rounded cursor-pointer hover:bg-red-700 transition duration-300"
               />
 
               {/* Redirect to Login */}
