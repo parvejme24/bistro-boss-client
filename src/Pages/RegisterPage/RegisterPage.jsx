@@ -10,17 +10,22 @@ import { FaFacebook, FaGithub } from "react-icons/fa";
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
 
+  // initialize the form using react-hook-form
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange", // onChange enables real-time validation
+  });
 
+  // handle form submission
   const onSubmit = (data) => {
     console.log("Form Data:", data);
-    // Handle form submission logic (e.g., API call) here
+    // handle form submission logic (e.g., API call) here
   };
 
+  // toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -33,12 +38,12 @@ export default function RegisterPage() {
       }}
     >
       <div className="container mx-auto min-h-screen flex justify-center items-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white bg-opacity-60 p-10 rounded-lg shadow-md mx-5 lg:mx-0">
+        <div className="max-w-[1100px] grid grid-cols-1 md:grid-cols-2 gap-10 bg-white bg-opacity-60 p-10 rounded-lg shadow-md mx-5 lg:mx-0">
           <div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
               <h2 className="text-2xl font-bold pb-5 text-center">Sign Up</h2>
 
-              {/* Name Input */}
+              {/* name input */}
               <div className="space-y-1">
                 <label className="text-sm">Name</label>
                 <input
@@ -61,7 +66,7 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* Email Input */}
+              {/* email input */}
               <div className="space-y-1">
                 <label className="text-sm">Email</label>
                 <input
@@ -82,7 +87,7 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* Password Input */}
+              {/* password input */}
               <div className="space-y-1 relative">
                 <label className="text-sm">Password</label>
                 <input
@@ -115,14 +120,19 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* Submit Button */}
+              {/* submit button */}
               <input
                 type="submit"
                 value="Sign Up"
-                className="text-center w-full bg-[#D1A054] py-3 text-white rounded cursor-pointer hover:bg-red-700 transition duration-300"
+                className={`text-center w-full py-3 text-white rounded cursor-pointer transition duration-300 ${
+                  isValid
+                    ? "bg-[#D1A054] hover:bg-red-700"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
+                disabled={!isValid}
               />
 
-              {/* Redirect to Login */}
+              {/* redirect to login */}
               <p className="text-center text-sm text-[#D1A054]">
                 Already registered?{" "}
                 <Link
@@ -135,7 +145,7 @@ export default function RegisterPage() {
 
               <span className="text-sm text-center block">Or sign up with</span>
 
-              {/* social login  */}
+              {/* social login */}
               <div className="flex justify-center gap-3">
                 <button className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300">
                   <FaGoogle />
@@ -150,7 +160,7 @@ export default function RegisterPage() {
             </form>
           </div>
 
-          {/* Login Image */}
+          {/* login image */}
           <div className="hidden md:flex justify-center items-center">
             <img src={LOGIN_IMAGE} alt="Login" className="w-full" />
           </div>
