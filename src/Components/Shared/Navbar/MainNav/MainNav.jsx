@@ -22,15 +22,23 @@ const NavItem = ({ link, toggleMenu }) => (
 
 export default function MainNav() {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const menuRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
   // Close the menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        !dropdownRef.current.contains(event.target)
+      ) {
         setIsOpen(false); // Close the menu if clicking outside
+        setDropdownOpen(false); // Close dropdown if clicking outside
       }
     };
 
@@ -58,28 +66,65 @@ export default function MainNav() {
               isOpen ? "block" : "hidden"
             } lg:block`}
           >
-            {["Home", "About", "Menu", "Contact", "Blog", "Shop"].map(
-              (link) => (
-                <NavItem
-                  key={link}
-                  link={link}
-                  toggleMenu={() => setIsOpen(false)}
-                />
-              )
-            )}
+            {[
+              "Home",
+              "About",
+              "Menu",
+              "Contact",
+              "Login",
+              "Register",
+              "Shop",
+            ].map((link) => (
+              <NavItem
+                key={link}
+                link={link}
+                toggleMenu={() => setIsOpen(false)}
+              />
+            ))}
           </ul>
 
           {/* Icons and CTA */}
-          <div className="space-x-4 flex items-center">
+          <div className="space-x-4 flex items-center relative">
             <button className="border border-red-600 p-3 rounded-lg hover:bg-red-600 hover:text-white transition-transform duration-300 transform hover:scale-110 shadow-md">
               <FaHeart size={18} />
             </button>
             <button className="border border-red-600 p-3 rounded-lg hover:bg-red-600 hover:text-white transition-transform duration-300 transform hover:scale-110 shadow-md">
               <FaCartShopping size={18} />
             </button>
-            <button className="border border-red-600 p-3 rounded-lg hover:bg-red-600 hover:text-white transition-transform duration-300 transform hover:scale-110 shadow-md">
-              <FaUserAlt size={18} />
-            </button>
+
+            {/* Dropdown for user */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                className="border border-red-600 p-3 rounded-lg hover:bg-red-600 hover:text-white transition-transform duration-300 transform hover:scale-110 shadow-md"
+                onClick={toggleDropdown}
+              >
+                <FaUserAlt size={18} />
+              </button>
+
+              {/* Dropdown Menu */}
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-[#050F20] border border-[#f73b3b56] rounded-md shadow-lg z-50 text-white">
+                  <ul className="p-2 space-y-2">
+                    {["Profile", "Orders", "Logout"].map((item) => (
+                      <li key={item}>
+                        <NavLink
+                          to={`/${item.toLowerCase()}`}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-white font-bold px-3 py-2 border-l-4 border-red-600 rounded-md bg-gradient-to-r from-red-600 to-[#010F1C] w-full block"
+                              : "hover:text-white transition-colors px-3 py-2 border border-l-4 rounded-md border-[#f336367a] hover:bg-gradient-to-r from-red-600 to-[#010F1C] block"
+                          }
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          {item}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
             <button className="hidden lg:flex bg-[#EB0029] px-5 py-3 rounded-lg hover:bg-red-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
               Login Now
             </button>
@@ -103,4 +148,3 @@ export default function MainNav() {
     </div>
   );
 }
-

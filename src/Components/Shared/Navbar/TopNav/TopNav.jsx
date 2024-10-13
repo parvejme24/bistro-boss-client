@@ -1,5 +1,5 @@
 import React from "react";
-import { FaClock, FaFacebook } from "react-icons/fa";
+import { FaClock, FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function TopNav() {
@@ -21,17 +21,17 @@ export default function TopNav() {
             </li>
             <li>
               <Link to={""}>
-                <FaFacebook />
+                <FaTwitter />
               </Link>
             </li>
             <li>
               <Link to={""}>
-                <FaFacebook />
+                <FaYoutube />
               </Link>
             </li>
             <li>
               <Link to={""}>
-                <FaFacebook />
+                <FaInstagram />
               </Link>
             </li>
           </ul>
