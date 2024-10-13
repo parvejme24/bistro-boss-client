@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useForm } from "react-hook-form";
 import LOGIN_IMAGE from "../../assets/login.png";
 import { Link } from "react-router-dom";
@@ -6,6 +6,7 @@ import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { TfiReload } from "react-icons/tfi";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 import LOGIN_BG from "../../assets/login-bg.png";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 // function to generate a random captcha
 const generateCaptcha = () => {
@@ -19,6 +20,8 @@ const generateCaptcha = () => {
 };
 
 export default function LoginPage() {
+  const { signIn } = useContext(AuthContext);
+
   const [showPassword, setShowPassword] = useState(false);
   const [captcha, setCaptcha] = useState(generateCaptcha());
   const [captchaInput, setCaptchaInput] = useState("");
@@ -38,7 +41,10 @@ export default function LoginPage() {
       alert("Captcha is incorrect. Please try again.");
     } else {
       console.log("Form Data:", data);
-      // handle login logic here (e.g., API call)
+      signIn(data.email, data.password).then((result) => {
+        const user = result.user;
+        console.log("user", user);
+      });
     }
   };
 

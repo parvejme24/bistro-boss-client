@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import LOGIN_IMAGE from "../../assets/login.png";
 import LOGIN_BG from "../../assets/login-bg.png";
@@ -6,8 +6,12 @@ import { Link } from "react-router-dom";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { FaGoogle } from "react-icons/fa6";
 import { FaFacebook, FaGithub } from "react-icons/fa";
+import { AuthContext } from "../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 export default function RegisterPage() {
+  const { createUser } = useContext(AuthContext);
+
   const [showPassword, setShowPassword] = useState(false);
 
   // initialize the form using react-hook-form
@@ -22,7 +26,17 @@ export default function RegisterPage() {
   // handle form submission
   const onSubmit = (data) => {
     console.log("Form Data:", data);
-    // handle form submission logic (e.g., API call) here
+    createUser(data.email, data.password).then((result) => {
+      const loggedUser = result.user;
+      console.log(loggedUser);
+      Swal.fire({
+        position: "center-center",
+        icon: "success",
+        title: "Register Successful",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    });
   };
 
   // toggle password visibility
