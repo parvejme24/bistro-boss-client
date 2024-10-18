@@ -1,26 +1,33 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { FaHeart, FaUserAlt, FaBars, FaTimes } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../../../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 // NavItem Component
-const NavItem = ({ link, toggleMenu }) => (
-  <li className="mx-4 my-2 lg:my-0 mb-2">
-    <NavLink
-      to={`/${link.toLowerCase()}`}
-      className={({ isActive }) =>
-        isActive
-          ? "text-white font-bold px-3 py-2 border-l-4 border-red-600 rounded-md lg:border-none lg:rounded-none lg:p-0 bg-gradient-to-r from-red-600 to-[#010F1C] w-full block lg:flex"
-          : "hover:text-white transition-colors px-3 py-2 border border-l-4 rounded-md border-[#f336367a] lg:p-0 lg:border-none lg:rounded-none hover:bg-gradient-to-r from-red-600 to-[#010F1C] block lg:flex"
-      }
-      onClick={toggleMenu}
-    >
-      {link}
-    </NavLink>
-  </li>
-);
+const NavItem = ({ link, toggleMenu }) => {
+  const path = link === "Home" ? "/" : `/${link.toLowerCase()}`;
+  return (
+    <li className="mx-4 my-2 lg:my-0 mb-2">
+      <NavLink
+        to={path}
+        className={({ isActive }) =>
+          isActive
+            ? "text-white font-bold px-3 py-2 border-l-4 border-red-600 rounded-md lg:border-none lg:rounded-none lg:p-0 bg-gradient-to-r from-red-600 to-[#010F1C] w-full block lg:flex"
+            : "hover:text-white transition-colors px-3 py-2 border border-l-4 rounded-md border-[#f336367a] lg:p-0 lg:border-none lg:rounded-none hover:bg-gradient-to-r from-red-600 to-[#010F1C] block lg:flex"
+        }
+        onClick={toggleMenu}
+      >
+        {link}
+      </NavLink>
+    </li>
+  );
+};
 
 export default function MainNav() {
+  const { user, logOut } = useContext(AuthContext);
+
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const menuRef = useRef(null);
@@ -28,6 +35,17 @@ export default function MainNav() {
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
+
+  const handleLogout = () => {
+    logOut().then(() => {
+      Swal.fire({
+        icon: "success",
+        title: "Logged Out Successfully!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    });
+  };
 
   // Close the menu when clicking outside
   useEffect(() => {
@@ -66,15 +84,7 @@ export default function MainNav() {
               isOpen ? "block" : "hidden"
             } lg:block`}
           >
-            {[
-              "Home",
-              "About",
-              "Menu",
-              "Contact",
-              "Login",
-              "Register",
-              "Shop",
-            ].map((link) => (
+            {["Home", "About", "Menu", "Contact", "Shop"].map((link) => (
               <NavItem
                 key={link}
                 link={link}
@@ -98,14 +108,28 @@ export default function MainNav() {
                 className="border border-red-600 p-3 rounded-lg hover:bg-red-600 hover:text-white transition-transform duration-300 transform hover:scale-110 shadow-md"
                 onClick={toggleDropdown}
               >
-                <FaUserAlt size={18} />
+                {user ? (
+                  <img
+                    src={user.photoURL || "path/to/default-avatar.png"} // Provide a default avatar path if no photo URL
+                    alt="User Avatar"
+                    className="w-6 h-6 rounded-full inline-block"
+                  />
+                ) : (
+                  <FaUserAlt size={18} />
+                )}
               </button>
 
               {/* Dropdown Menu */}
-              {dropdownOpen && (
+              {dropdownOpen && user && (
                 <div className="absolute right-0 mt-2 w-48 bg-[#050F20] border border-[#f73b3b56] rounded-md shadow-lg z-50 text-white">
                   <ul className="p-2 space-y-2">
-                    {["Profile", "Orders", "Logout"].map((item) => (
+                    <li className="text-center">
+                      <p className="font-bold text-xl">
+                        {user.displayName || "User"}
+                      </p>
+                      <p className="text-sm">{user.email}</p>
+                    </li>
+                    {["Profile", "Orders"].map((item) => (
                       <li key={item}>
                         <NavLink
                           to={`/${item.toLowerCase()}`}
@@ -120,14 +144,29 @@ export default function MainNav() {
                         </NavLink>
                       </li>
                     ))}
+                    <li>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setDropdownOpen(false);
+                        }}
+                        className="w-full text-left bg-red-600 text-white hover:bg-red-800 px-3 py-2 rounded-md transition-colors"
+                      >
+                        Logout
+                      </button>
+                    </li>
                   </ul>
                 </div>
               )}
             </div>
 
-            <button className="hidden lg:flex bg-[#EB0029] px-5 py-3 rounded-lg hover:bg-red-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-              Login Now
-            </button>
+            {!user && (
+              <Link to={"/login"}>
+                <button className="hidden lg:flex bg-[#EB0029] px-5 py-3 rounded-lg hover:bg-red-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                  Login Now
+                </button>
+              </Link>
+            )}
 
             {/* Mobile Toggle Button */}
             <div className="lg:hidden ml-4">

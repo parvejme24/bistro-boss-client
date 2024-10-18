@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useForm } from "react-hook-form";
-import LOGIN_IMAGE from "../../assets/login.png";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { TfiReload } from "react-icons/tfi";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
-import LOGIN_BG from "../../assets/login-bg.png";
+import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthProvider";
+import LOGIN_IMAGE from "../../assets/login.png";
+import LOGIN_BG from "../../assets/login-bg.png";
 
-// function to generate a random captcha
 const generateCaptcha = () => {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -21,6 +21,7 @@ const generateCaptcha = () => {
 
 export default function LoginPage() {
   const { signIn } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [captcha, setCaptcha] = useState(generateCaptcha());
@@ -35,31 +36,34 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm();
 
-  // function to handle form submission
   const onSubmit = (data) => {
     if (captchaInput !== captcha) {
       alert("Captcha is incorrect. Please try again.");
     } else {
-      console.log("Form Data:", data);
       signIn(data.email, data.password).then((result) => {
         const user = result.user;
         console.log("user", user);
+        Swal.fire({
+          position: "center-center",
+          icon: "success",
+          title: "Login Successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/");
       });
     }
   };
 
-  // function to toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  // function to refresh captcha
   const refreshCaptcha = () => {
     setCaptcha(generateCaptcha());
     setCaptchaInput("");
   };
 
-  // useEffect to enable or disable login button based on form and captcha validation
   useEffect(() => {
     const email = watch("email");
     const password = watch("password");

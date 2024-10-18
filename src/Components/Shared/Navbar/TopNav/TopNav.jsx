@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 export default function TopNav() {
   return (
     <div className="bg-[#EB0029] py-2">
-      <div className="container mx-auto flex items-center justify-between flex-wrap">
+      <div className="container mx-auto px-5 flex items-center justify-between flex-wrap">
         <div>
           <p className="text-[#F7BFD4] flex items-center gap-2">
             <FaClock /> 09:00 am - 06:00 pm
