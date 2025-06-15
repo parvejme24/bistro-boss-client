@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import SectionHeader from "../../../../Components/Shared/SectionHeader/SectionHeader";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import Slider from "react-slick";
 
 // Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
@@ -19,30 +19,50 @@ export default function Testimonial() {
       .then((data) => setReviews(data));
   }, []);
 
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 5000,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 0,
+    cssEase: "linear",
+    arrows: false,
+    responsive: [
+      {
+        breakpoint: 320,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        }
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+        }
+      }
+    ]
+  };
+
   return (
     <div className="py-20">
       <SectionHeader title={"Testimonial"} subTitle={"Client Feedback"} />
 
       <div className="container mx-auto pt-14">
-        <Swiper
-          slidesPerView={2}
-          spaceBetween={20}
-          className="mySwiper"
-          breakpoints={{
-            320: {
-              slidesPerView: 1,
-            },
-            768: {
-              slidesPerView: 2,
-            },
-            1024: {
-              slidesPerView: 3,
-            },
-          }}
-        >
+        <Slider {...settings} className="">
           {reviews?.map((review) => (
-            <SwiperSlide key={review._id}>
-              <div className="p-5 rounded-xl shadow-md border min-h-[250px]">
+            <div key={review._id} className="px-2">
+              <div className="p-5 rounded-xl shadow-md border h-[250px]">
                 {/* Upper part: Profile and Info */}
                 <div className="flex gap-5">
                   <img
@@ -66,9 +86,9 @@ export default function Testimonial() {
                 {/* Review Details */}
                 <p className="mt-5">{review.details}</p>
               </div>
-            </SwiperSlide>
+            </div>
           ))}
-        </Swiper>
+        </Slider>
       </div>
     </div>
   );

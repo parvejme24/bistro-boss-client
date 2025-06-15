@@ -73,26 +73,27 @@ export default function MainNav() {
             <img
               src="https://gramentheme.com/html/fresheat/assets/img/logo/logoWhite.svg"
               alt="Logo"
-              className="w-32"
+              className="w-56"
             />
           </div>
 
           {/* Nav Links for all devices */}
-          <ul
-            ref={menuRef}
-            className={`lg:flex items-center gap-5 absolute lg:static top-[80px] left-0 w-full lg:w-auto bg-[#010f1cf8] transition-all duration-300 ease-in-out ${
-              isOpen ? "block" : "hidden"
-            } lg:block`}
-          >
-            {["Home", "About", "Menu", "Contact", "Shop"].map((link) => (
-              <NavItem
-                key={link}
-                link={link}
-                toggleMenu={() => setIsOpen(false)}
-              />
-            ))}
-          </ul>
+          <div className="w-[100%] flex justify-center items-center">
+            <ul
+              ref={menuRef}
+              className={`container mx-auto lg:flex items-center gap-5 absolute lg:static top-[80px] left-1/2 transform -translate-x-1/2 w-full lg:w-auto bg-[#010f1cf8] transition-all duration-300 ease-in-out ${isOpen ? "block" : "hidden"
+                } lg:block`}
+            >
+              {["Home", "About", "Menu", "Contact", "Shop"].map((link) => (
+                <NavItem
+                  key={link}
+                  link={link}
+                  toggleMenu={() => setIsOpen(false)}
+                />
+              ))}
+            </ul>
 
+          </div>
           {/* Icons and CTA */}
           <div className="space-x-4 flex items-center relative">
             <button className="border border-red-600 p-3 rounded-lg hover:bg-red-600 hover:text-white transition-transform duration-300 transform hover:scale-110 shadow-md">
@@ -162,7 +163,7 @@ export default function MainNav() {
 
             {!user && (
               <Link to={"/login"}>
-                <button className="hidden lg:flex bg-[#EB0029] px-5 py-3 rounded-lg hover:bg-red-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <button className="hidden w-[120px] lg:flex bg-[#EB0029] px-5 py-3 rounded-lg hover:bg-red-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex justify-center items-center">
                   Login Now
                 </button>
               </Link>
