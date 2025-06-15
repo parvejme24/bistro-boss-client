@@ -15,6 +15,34 @@ import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <div className="relative">
+      {/* extra asset for atteractive design  */}
+      <div className="pointer-events-none">
+        <img
+          className="absolute bottom-20 left-0 animate-pulse md:w-[120px] z-10"
+          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_1.png"
+          alt=""
+          draggable="false"
+        />
+        <img
+          className="absolute top-0 right-0 w-[150px] z-20"
+          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_4.png"
+          alt=""
+          draggable="false"
+        />
+        <img
+          className="absolute bottom-0 left-0 z-30"
+          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_2.png"
+          alt=""
+          draggable="false"
+        />
+        <img
+          className="absolute top-0 right-0 rotate-180 z-40"
+          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_2.png"
+          alt=""
+          draggable="false"
+        />
+      </div>
+
       {/* main footer  */}
       <div className="bg-[#010F1C]">
         <div className="container mx-auto px-3 py-20">
@@ -269,34 +297,6 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-      </div>
-
-      {/* extra asset for atteractive design  */}
-      <div>
-        <img
-          className="absolute bottom-20 left-0 animate-pulse hidden lg:flex w-[120px]"
-          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_1.png"
-          alt=""
-          draggable="false"
-        />
-        <img
-          className="absolute top-0 right-0 hidden lg:flex w-[150px]"
-          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_4.png"
-          alt=""
-          draggable="false"
-        />
-        <img
-          className="absolute bottom-0 left-0 hidden lg:flex"
-          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_2.png"
-          alt=""
-          draggable="false"
-        />
-        <img
-          className="absolute top-0 right-0 rotate-180 hidden lg:flex"
-          src="https://gramentheme.com/html/fresheat/assets/img/shape/footerShape1_2.png"
-          alt=""
-          draggable="false"
-        />
       </div>
     </div>
   );
