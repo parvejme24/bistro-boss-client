@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import SectionHeader from "../../../../Components/Shared/SectionHeader/SectionHeader";
 import MenuCard from "../../../../Components/Shared/MenuCard/MenuCard";
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+// import required modules
+import { Pagination } from 'swiper/modules';
 
 export default function PopularMenu() {
   const [menus, setMenus] = useState([]);
@@ -19,10 +28,32 @@ export default function PopularMenu() {
         />
 
         {/* our popular dishes  */}
-        <div className="mt-14 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
-          {menus?.map((menu) => (
-            <MenuCard menu={menu} />
-          ))}
+        <div className="mt-14">
+          <Swiper
+            slidesPerView={1}
+            spaceBetween={10}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 40,
+              },
+              1024: {
+                slidesPerView: 5,
+                spaceBetween: 50,
+              },
+            }}
+            className="mySwiper"
+          >
+            {menus?.map((menu) => (
+              <SwiperSlide key={menu._id}>
+                <MenuCard menu={menu} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </div>
     </div>

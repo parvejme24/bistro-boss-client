@@ -84,7 +84,7 @@ export default function MainNav() {
               className={`container mx-auto lg:flex items-center gap-5 absolute lg:static top-[80px] left-1/2 transform -translate-x-1/2 w-full lg:w-auto bg-[#010f1cf8] transition-all duration-300 ease-in-out ${isOpen ? "block" : "hidden"
                 } lg:block`}
             >
-              {["Home", "About", "Menu", "Contact", "Shop"].map((link) => (
+              {["Home", "About", "Menu", "Chef", "Contact", "Blog"].map((link) => (
                 <NavItem
                   key={link}
                   link={link}

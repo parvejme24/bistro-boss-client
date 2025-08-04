@@ -7,7 +7,7 @@ export default function MenuCard({ menu, displayMode }) {
   return (
     <div
       key={menu._id}
-      className={`bg-white relative rounded-2xl p-5 duration-300 group overflow-hidden ${
+      className={`bg-white relative rounded-2xl p-5 duration-300 group overflow-hidden w-full h-fit ${
         displayMode === 'list' ? 'flex items-center gap-5 p-3' : ''
       }`}
     >
