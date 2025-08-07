@@ -20,7 +20,7 @@ const generateCaptcha = () => {
 };
 
 export default function LoginPage() {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, loading, error, success, clearAuthError, clearAuthSuccess } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +28,42 @@ export default function LoginPage() {
   const [captchaInput, setCaptchaInput] = useState("");
   const [isCaptchaValid, setIsCaptchaValid] = useState(false);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Clear errors and success messages on component mount
+  useEffect(() => {
+    clearAuthError();
+    clearAuthSuccess();
+  }, [clearAuthError, clearAuthSuccess]);
+
+  // Handle success and error messages
+  useEffect(() => {
+    if (success && !loading) {
+      Swal.fire({
+        position: "center-center",
+        icon: "success",
+        title: "Login Successful!",
+        text: "Welcome back to Bistro Boss!",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        navigate("/");
+      });
+      clearAuthSuccess();
+    }
+  }, [success, loading, navigate, clearAuthSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error.message || "Invalid email or password. Please try again.",
+      });
+      clearAuthError();
+      setIsSubmitting(false);
+    }
+  }, [error, clearAuthError]);
 
   const {
     register,
@@ -36,22 +72,28 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (captchaInput !== captcha) {
-      alert("Captcha is incorrect. Please try again.");
-    } else {
-      signIn(data.email, data.password).then((result) => {
-        const user = result.user;
-        console.log("user", user);
-        Swal.fire({
-          position: "center-center",
-          icon: "success",
-          title: "Login Successful",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        navigate("/");
+      Swal.fire({
+        icon: "error",
+        title: "Captcha Error",
+        text: "Captcha is incorrect. Please try again.",
       });
+      refreshCaptcha();
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const credentials = {
+        email: data.email,
+        password: data.password,
+      };
+
+      await signIn(credentials);
+    } catch (error) {
+      // Error is handled by the useEffect above
+      console.error("Login error:", error);
     }
   };
 
@@ -189,11 +231,11 @@ export default function LoginPage() {
               {/* submit button */}
               <input
                 type="submit"
-                value="Login"
+                value={isSubmitting ? "Logging In..." : "Login"}
                 className={`text-center w-full bg-[#D1A054] py-3 text-white rounded cursor-pointer hover:bg-red-700 transition duration-300 ${
-                  isButtonEnabled ? "" : "opacity-50 cursor-not-allowed"
+                  isButtonEnabled && !isSubmitting ? "" : "opacity-50 cursor-not-allowed"
                 }`}
-                disabled={!isButtonEnabled}
+                disabled={!isButtonEnabled || isSubmitting}
               />
 
               {/* redirect to register */}
@@ -211,13 +253,22 @@ export default function LoginPage() {
 
               {/* social login */}
               <div className="flex justify-center gap-3">
-                <button className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300">
+                <button 
+                  type="button"
+                  className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300"
+                >
                   <FaGoogle />
                 </button>
-                <button className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300">
+                <button 
+                  type="button"
+                  className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300"
+                >
                   <FaFacebook />
                 </button>
-                <button className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300">
+                <button 
+                  type="button"
+                  className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300"
+                >
                   <FaGithub />
                 </button>
               </div>

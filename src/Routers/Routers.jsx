@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import DashboardLayout from "../Layout/DashboardLayout";
+import ProtectedRoute from "../Components/Shared/ProtectedRoute/ProtectedRoute";
 import HomePage from "../Pages/HomePage/HomePage";
 import MenuPage from "../Pages/MenuPage/MenuPage";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
@@ -88,67 +89,123 @@ const router = createBrowserRouter([
       },
     ],
   },
-  // Dashboard routes with DashboardLayout
+  // Dashboard routes with DashboardLayout and ProtectedRoute
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
       // Dashboard Home Pages
       {
         path: "admin",
-        element: <AdminDashboard />,
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "chef",
-        element: <ChefDashboard />,
+        element: (
+          <ProtectedRoute allowedRoles={['chef']}>
+            <ChefDashboard />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "user",
-        element: <UserDashboard />,
+        element: (
+          <ProtectedRoute allowedRoles={['user', 'customer']}>
+            <UserDashboard />
+          </ProtectedRoute>
+        ),
       },
       // ADMIN Dashboard Routes
       {
         path: "admin/blogs/add",
-        element: <AddBlogPage />,
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AddBlogPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "admin/blogs",
-        element: <BlogListPage />,
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <BlogListPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "admin/blogs/edit/:id",
-        element: <EditBlogPage />,
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <EditBlogPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "admin/orders",
-        element: <AllOrderPage />,
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AllOrderPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "admin/users",
-        element: <UsersPage />,
+        element: (
+          <ProtectedRoute allowedRoles={['admin']}>
+            <UsersPage />
+          </ProtectedRoute>
+        ),
       },
       // CHEF Dashboard Routes
       {
         path: "chef/menu/add",
-        element: <AddMenuPage />,
+        element: (
+          <ProtectedRoute allowedRoles={['chef']}>
+            <AddMenuPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "chef/menu/edit/:id",
-        element: <EditMenuPage />,
+        element: (
+          <ProtectedRoute allowedRoles={['chef']}>
+            <EditMenuPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "chef/menu",
-        element: <MenuListPage />,
+        element: (
+          <ProtectedRoute allowedRoles={['chef']}>
+            <MenuListPage />
+          </ProtectedRoute>
+        ),
       },
       // USER Dashboard Routes
       {
         path: "user/orders",
-        element: <MyOrder />,
+        element: (
+          <ProtectedRoute allowedRoles={['user', 'customer']}>
+            <MyOrder />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "user/profile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute allowedRoles={['user', 'customer']}>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import LOGIN_IMAGE from "../../assets/login.png";
 import LOGIN_BG from "../../assets/login-bg.png";
@@ -10,46 +10,76 @@ import { AuthContext } from "../../Provider/AuthProvider";
 import Swal from "sweetalert2";
 
 export default function RegisterPage() {
-  const { createUser } = useContext(AuthContext);
+  const { createUser, loading, error, success, clearAuthError, clearAuthSuccess } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+
+  // Clear errors and success messages on component mount
+  useEffect(() => {
+    clearAuthError();
+    clearAuthSuccess();
+  }, [clearAuthError, clearAuthSuccess]);
+
+  // Handle success and error messages
+  useEffect(() => {
+    if (success && !loading) {
+      Swal.fire({
+        position: "center-center",
+        icon: "success",
+        title: "Registration Successful!",
+        text: "Your account has been created successfully. Please login to continue.",
+        showConfirmButton: true,
+        confirmButtonText: "Go to Login",
+        confirmButtonColor: "#D1A054",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
+      clearAuthSuccess();
+    }
+  }, [success, loading, navigate, clearAuthSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Registration Failed",
+        text: error.message || "Something went wrong. Please try again.",
+      });
+      clearAuthError();
+      setIsSubmitting(false);
+    }
+  }, [error, clearAuthError]);
 
   // initialize the form using react-hook-form
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
+    watch,
   } = useForm({
     mode: "onChange",
   });
 
   // handle form submission
-  const onSubmit = (data) => {
-    createUser(data.email, data.password)
-      .then((result) => {
-        const loggedUser = result.user;
-        console.log(loggedUser);
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      // Prepare user data for registration
+      const userData = {
+        name: data.fullName,
+        email: data.email,
+        password: data.password,
+        role: "user", // Default role for new registrations
+      };
 
-        // Display success message
-        Swal.fire({
-          position: "center-center",
-          icon: "success",
-          title: "Register Successful",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-
-        // Redirect to home or login page after registration
-        navigate("/");
-      })
-      .catch((error) => {
-        // Handle errors (e.g., email already in use, weak password, etc.)
-        Swal.fire({
-          icon: "error",
-          title: "Registration Failed",
-          text: error.message,
-        });
-      });
+      await createUser(userData);
+    } catch (error) {
+      // Error is handled by the useEffect above
+      console.error("Registration error:", error);
+    }
   };
 
   // toggle password visibility
@@ -150,13 +180,13 @@ export default function RegisterPage() {
               {/* submit button */}
               <input
                 type="submit"
-                value="Sign Up"
+                value={isSubmitting ? "Signing Up..." : "Sign Up"}
                 className={`text-center w-full py-3 text-white rounded cursor-pointer transition duration-300 ${
-                  isValid
+                  isValid && !isSubmitting
                     ? "bg-[#D1A054] hover:bg-red-700"
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
-                disabled={!isValid}
+                disabled={!isValid || isSubmitting}
               />
 
               {/* redirect to login */}
@@ -174,13 +204,22 @@ export default function RegisterPage() {
 
               {/* social login */}
               <div className="flex justify-center gap-3">
-                <button className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300">
+                <button 
+                  type="button"
+                  className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300"
+                >
                   <FaGoogle />
                 </button>
-                <button className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300">
+                <button 
+                  type="button"
+                  className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300"
+                >
                   <FaFacebook />
                 </button>
-                <button className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300">
+                <button 
+                  type="button"
+                  className="p-2 rounded-full border border-black hover:border-[#D1A054] hover:text-white hover:bg-[#D1A054] duration-300"
+                >
                   <FaGithub />
                 </button>
               </div>

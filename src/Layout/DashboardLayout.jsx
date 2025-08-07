@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { FaHome, FaBlog, FaUsers, FaShoppingCart, FaUtensils, FaUser, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
+import { AuthContext } from "../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 export default function DashboardLayout() {
+  const { user, logOut, loading } = useContext(AuthContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -15,9 +18,23 @@ export default function DashboardLayout() {
     setSidebarOpen(!sidebarOpen);
   };
 
-  const handleLogout = () => {
-    // Add logout logic here
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      Swal.fire({
+        icon: "success",
+        title: "Logged Out Successfully!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      navigate('/login');
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Logout Failed",
+        text: "Something went wrong. Please try again.",
+      });
+    }
   };
 
   // Navigation items based on user role
@@ -102,10 +119,11 @@ export default function DashboardLayout() {
         <div className="absolute bottom-4 left-4 right-4">
           <button
             onClick={handleLogout}
-            className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200"
+            disabled={loading}
+            className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <FaSignOutAlt className="mr-3" />
-            Logout
+            {loading ? "Logging out..." : "Logout"}
           </button>
         </div>
       </div>
@@ -124,7 +142,7 @@ export default function DashboardLayout() {
             
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
-                Welcome, {userRole === 'admin' ? 'Admin' : userRole === 'chef' ? 'Chef' : 'User'}
+                Welcome, {user?.name || (userRole === 'admin' ? 'Admin' : userRole === 'chef' ? 'Chef' : 'User')}
               </div>
             </div>
           </div>

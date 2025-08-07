@@ -26,7 +26,7 @@ const NavItem = ({ link, toggleMenu }) => {
 };
 
 export default function MainNav() {
-  const { user, logOut } = useContext(AuthContext);
+  const { user, logOut, loading } = useContext(AuthContext);
 
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -36,15 +36,22 @@ export default function MainNav() {
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
-  const handleLogout = () => {
-    logOut().then(() => {
+  const handleLogout = async () => {
+    try {
+      await logOut();
       Swal.fire({
         icon: "success",
         title: "Logged Out Successfully!",
         showConfirmButton: false,
         timer: 1500,
       });
-    });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Logout Failed",
+        text: "Something went wrong. Please try again.",
+      });
+    }
   };
 
   // Close the menu when clicking outside
@@ -108,10 +115,11 @@ export default function MainNav() {
               <button
                 className="border border-red-600 p-3 rounded-lg hover:bg-red-600 hover:text-white transition-transform duration-300 transform hover:scale-110 shadow-md"
                 onClick={toggleDropdown}
+                disabled={loading}
               >
                 {user ? (
                   <img
-                    src={user.photoURL || "path/to/default-avatar.png"} // Provide a default avatar path if no photo URL
+                    src={user.photoURL || "https://via.placeholder.com/24x24/666666/FFFFFF?text=U"}
                     alt="User Avatar"
                     className="w-6 h-6 rounded-full inline-block"
                   />
@@ -126,7 +134,7 @@ export default function MainNav() {
                   <ul className="p-2 space-y-2">
                     <li className="text-center">
                       <p className="font-bold text-xl">
-                        {user.displayName || "User"}
+                        {user.name || user.displayName || "User"}
                       </p>
                       <p className="text-sm">{user.email}</p>
                     </li>
@@ -151,9 +159,10 @@ export default function MainNav() {
                           handleLogout();
                           setDropdownOpen(false);
                         }}
-                        className="w-full text-left bg-red-600 text-white hover:bg-red-800 px-3 py-2 rounded-md transition-colors"
+                        disabled={loading}
+                        className="w-full text-left bg-red-600 text-white hover:bg-red-800 px-3 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Logout
+                        {loading ? "Logging out..." : "Logout"}
                       </button>
                     </li>
                   </ul>
