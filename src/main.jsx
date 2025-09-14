@@ -4,18 +4,27 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./Routers/Routers.jsx";
 import { HelmetProvider } from "react-helmet-async";
-import { Provider } from "react-redux";
-import { store } from "./store/store.js";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./Provider/AuthProvider.jsx";
+
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <HelmetProvider>
           <RouterProvider router={router} />
         </HelmetProvider>
       </AuthProvider>
-    </Provider>
+    </QueryClientProvider>
   </StrictMode>
 );

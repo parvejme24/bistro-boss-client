@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import SectionHeader from "../../../../Components/Shared/SectionHeader/SectionHeader";
 import MenuCard from "../../../../Components/Shared/MenuCard/MenuCard";
 // Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/pagination";
 
 // import required modules
-import { Pagination } from 'swiper/modules';
+import { Pagination } from "swiper/modules";
 
 export default function PopularMenu() {
   const [menus, setMenus] = useState([]);
@@ -21,7 +21,7 @@ export default function PopularMenu() {
 
   return (
     <div className="bg-[#F4F1EA] px-3 py-20">
-      <div className="container mx-auto">
+      <div className="container mx-auto max-w-7xl px-5">
         <SectionHeader
           title={"POPULAR DISHES"}
           subTitle={"Best selling Dishes"}

@@ -45,7 +45,7 @@ export default function Footer() {
 
       {/* main footer  */}
       <div className="bg-[#010F1C]">
-        <div className="container mx-auto px-3 py-20">
+        <div className="container mx-auto max-w-7xl px-3 py-20">
           {/* address email and call section  */}
           <div className="bg-[#FC791A] rounded-xl p-10 grid grid-cols-1 lg:grid-cols-3 gap-5">
             <div className="flex items-center gap-5">

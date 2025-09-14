@@ -8,7 +8,7 @@ import "swiper/css";
 export default function PopularFood() {
   return (
     <div className="bg-[#F4F1EA] px-3 py-20">
-      <div className="container mx-auto">
+      <div className="container mx-auto max-w-7xl px-5">
         <SectionHeader title={"Best Food"} subTitle={"Popular Food Items"} />
 
         {/* Popular Food Section */}

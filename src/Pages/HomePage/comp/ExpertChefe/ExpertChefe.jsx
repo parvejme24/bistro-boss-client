@@ -36,7 +36,7 @@ export default function ExpertChefe() {
     <div className="bg-[#F4F1EA] px-3 py-20">
       <SectionHeader title={"Our Chefe"} subTitle={"Meet Our Expert Chefe"} />
 
-      <div className="pt-14 container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="pt-14 container mx-auto max-w-7xl px-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         {chefes.map((chefe) => (
           <div
             key={chefe.id}

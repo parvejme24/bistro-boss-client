@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { TfiReload } from "react-icons/tfi";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
@@ -20,25 +19,39 @@ const generateCaptcha = () => {
 };
 
 export default function LoginPage() {
-  const { signIn, loading, error, success, clearAuthError, clearAuthSuccess } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { login, loading, isInitialized, user, isAuthenticated } = useContext(AuthContext);
+  
+  // Show loading while checking authentication
+  if (loading && !isInitialized) {
+    return (
+      <div className="min-h-screen bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: `url(${LOGIN_BG})` }}>
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-xl">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
 
+  // Redirect logged-in users to their dashboard immediately
+  if (isAuthenticated && user) {
+    return <Navigate to={`/dashboard/${user.role}`} replace />;
+  }
+  
   const [showPassword, setShowPassword] = useState(false);
   const [captcha, setCaptcha] = useState(generateCaptcha());
   const [captchaInput, setCaptchaInput] = useState("");
   const [isCaptchaValid, setIsCaptchaValid] = useState(false);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
 
-  // Clear errors and success messages on component mount
+  // Redirect effect when user logs in successfully
   useEffect(() => {
-    clearAuthError();
-    clearAuthSuccess();
-  }, [clearAuthError, clearAuthSuccess]);
-
-  // Handle success and error messages
-  useEffect(() => {
-    if (success && !loading) {
+    if (user && isAuthenticated) {
+      // Show success message and redirect immediately
       Swal.fire({
         position: "center-center",
         icon: "success",
@@ -46,33 +59,17 @@ export default function LoginPage() {
         text: "Welcome back to Bistro Boss!",
         showConfirmButton: false,
         timer: 1500,
-      }).then(() => {
-        navigate("/");
       });
-      clearAuthSuccess();
+      
+      // Redirect to appropriate dashboard based on user role
+      const userRole = user.role || "customer";
+      navigate(`/dashboard/${userRole}`);
     }
-  }, [success, loading, navigate, clearAuthSuccess]);
+  }, [user, isAuthenticated, navigate]);
 
-  useEffect(() => {
-    if (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Login Failed",
-        text: error.message || "Invalid email or password. Please try again.",
-      });
-      clearAuthError();
-      setIsSubmitting(false);
-    }
-  }, [error, clearAuthError]);
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-
-  const onSubmit = async (data) => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    
     if (captchaInput !== captcha) {
       Swal.fire({
         icon: "error",
@@ -83,17 +80,26 @@ export default function LoginPage() {
       return;
     }
 
-    setIsSubmitting(true);
     try {
+      setIsSubmitting(true);
       const credentials = {
-        email: data.email,
-        password: data.password,
+        email: emailValue,
+        password: passwordValue,
       };
 
-      await signIn(credentials);
+      const result = await login(credentials);
+      // Redirect immediately after successful login
+      if (result?.data?.user?.role) {
+        navigate(`/dashboard/${result.data.user.role}`);
+      }
     } catch (error) {
-      // Error is handled by the useEffect above
-      console.error("Login error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error?.response?.data?.message || "Invalid email or password. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -104,22 +110,22 @@ export default function LoginPage() {
   const refreshCaptcha = () => {
     setCaptcha(generateCaptcha());
     setCaptchaInput("");
+    setIsCaptchaValid(false);
   };
 
   useEffect(() => {
-    const email = watch("email");
-    const password = watch("password");
+    // Basic validation
+    const isEmailValid = emailValue && emailValue.includes('@') && emailValue.includes('.');
+    const isPasswordValid = passwordValue && passwordValue.length >= 6;
+    const isCaptchaValid = captchaInput.trim() !== "" && captchaInput === captcha;
+    
+    const isFormValid = isEmailValid && isPasswordValid && isCaptchaValid;
 
-    const isFormValid =
-      !errors.email &&
-      !errors.password &&
-      email &&
-      password &&
-      captchaInput === captcha;
+
 
     setIsButtonEnabled(isFormValid);
     setIsCaptchaValid(captchaInput === captcha);
-  }, [watch("email"), watch("password"), captchaInput, errors, captcha]);
+  }, [emailValue, passwordValue, captchaInput, captcha]);
 
   return (
     <div
@@ -137,7 +143,7 @@ export default function LoginPage() {
 
           {/* right side: login form */}
           <div>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+            <form onSubmit={onSubmit} className="space-y-3">
               <h2 className="text-2xl font-bold pb-5 text-center">Login</h2>
 
               {/* email input */}
@@ -148,17 +154,10 @@ export default function LoginPage() {
                   name="email"
                   placeholder="Type Email"
                   className="px-4 py-3 w-full rounded border border-gray-300"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "Enter a valid email address",
-                    },
-                  })}
+                  value={emailValue}
+                  onChange={(e) => setEmailValue(e.target.value)}
                 />
-                {errors.email && (
-                  <p className="text-red-500 text-xs">{errors.email.message}</p>
-                )}
+
               </div>
 
               {/* password input */}
@@ -169,13 +168,8 @@ export default function LoginPage() {
                   name="password"
                   placeholder="Enter Your Password"
                   className="px-4 py-3 w-full rounded border border-gray-300"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Minimum 6 characters required",
-                    },
-                  })}
+                  value={passwordValue}
+                  onChange={(e) => setPasswordValue(e.target.value)}
                 />
                 <span
                   className="absolute right-4 top-10 cursor-pointer text-gray-500"
@@ -187,11 +181,7 @@ export default function LoginPage() {
                     <IoEyeOutline className="text-xl" />
                   )}
                 </span>
-                {errors.password && (
-                  <p className="text-red-500 text-xs">
-                    {errors.password.message}
-                  </p>
-                )}
+
               </div>
 
               {/* captcha field */}
@@ -216,15 +206,21 @@ export default function LoginPage() {
                   name="captchaInput"
                   placeholder="Enter Captcha"
                   className={`px-4 py-3 w-full rounded border ${
-                    isCaptchaValid
-                      ? "border-gray-300"
-                      : "border-red-500 focus:border-red-500"
+                    isCaptchaValid && captchaInput !== ""
+                      ? "border-green-500 focus:border-green-500"
+                      : captchaInput !== "" && !isCaptchaValid
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-gray-300"
                   } mt-2`}
                   value={captchaInput}
                   onChange={(e) => setCaptchaInput(e.target.value)}
                 />
-                {!isCaptchaValid && captchaInput !== "" && (
-                  <p className="text-red-500 text-xs">Invalid captcha</p>
+                {captchaInput !== "" && (
+                  <p className={`text-xs ${
+                    isCaptchaValid ? "text-green-500" : "text-red-500"
+                  }`}>
+                    {isCaptchaValid ? "✓ Captcha is correct" : "✗ Invalid captcha"}
+                  </p>
                 )}
               </div>
 
@@ -232,11 +228,19 @@ export default function LoginPage() {
               <input
                 type="submit"
                 value={isSubmitting ? "Logging In..." : "Login"}
-                className={`text-center w-full bg-[#D1A054] py-3 text-white rounded cursor-pointer hover:bg-red-700 transition duration-300 ${
-                  isButtonEnabled && !isSubmitting ? "" : "opacity-50 cursor-not-allowed"
+                className={`text-center w-full py-3 text-white rounded transition duration-300 ${
+                  isButtonEnabled && !isSubmitting 
+                    ? "bg-[#EB0029] hover:bg-red-800 cursor-pointer" 
+                    : "bg-gray-400 cursor-not-allowed opacity-50"
                 }`}
                 disabled={!isButtonEnabled || isSubmitting}
               />
+              
+
+              
+
+              
+
 
               {/* redirect to register */}
               <p className="text-center text-sm text-[#D1A054]">

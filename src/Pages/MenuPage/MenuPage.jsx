@@ -77,7 +77,7 @@ export default function MenuPage() {
       <DynamicTitle title={"Menu"} />
       <PageHeader title={"Menu Page"} />
 
-      <div className="container mx-auto pt-20 pb-8">
+      <div className="container mx-auto max-w-7xl px-5 pt-20 pb-8">
         <div className="bg-white px-4 py-4 rounded-lg mb-5 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           {/* search option  */}
           <div className="relative flex items-center w-full md:w-auto">

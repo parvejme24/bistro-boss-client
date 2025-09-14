@@ -1,29 +1,43 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import LOGIN_IMAGE from "../../assets/login.png";
 import LOGIN_BG from "../../assets/login-bg.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { FaGoogle } from "react-icons/fa6";
 import { FaFacebook, FaGithub } from "react-icons/fa";
-import { AuthContext } from "../../Provider/AuthProvider";
+import { useRegister } from "../../api/useUser";
 import Swal from "sweetalert2";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 export default function RegisterPage() {
-  const { createUser, loading, error, success, clearAuthError, clearAuthSuccess } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { user, isAuthenticated, loading, isInitialized } = useContext(AuthContext);
+  
+  // Show loading while checking authentication
+  if (loading && !isInitialized) {
+    return (
+      <div className="min-h-screen bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: `url(${LOGIN_BG})` }}>
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-2"></div>
+          <p className="text-xl">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Clear errors and success messages on component mount
-  useEffect(() => {
-    clearAuthError();
-    clearAuthSuccess();
-  }, [clearAuthError, clearAuthSuccess]);
+  // Redirect logged-in users to their dashboard immediately
+  if (isAuthenticated && user) {
+    return <Navigate to={`/dashboard/${user.role}`} replace />;
+  }
+  
+  // React Query hook for registration
+  const registerMutation = useRegister();
 
   // Handle success and error messages
-  useEffect(() => {
-    if (success && !loading) {
+  React.useEffect(() => {
+    if (registerMutation.isSuccess) {
       Swal.fire({
         position: "center-center",
         icon: "success",
@@ -37,21 +51,20 @@ export default function RegisterPage() {
           navigate("/login");
         }
       });
-      clearAuthSuccess();
+      registerMutation.reset();
     }
-  }, [success, loading, navigate, clearAuthSuccess]);
+  }, [registerMutation.isSuccess, navigate]);
 
-  useEffect(() => {
-    if (error) {
+  React.useEffect(() => {
+    if (registerMutation.isError) {
       Swal.fire({
         icon: "error",
         title: "Registration Failed",
-        text: error.message || "Something went wrong. Please try again.",
+        text: registerMutation.error?.response?.data?.message || "Something went wrong. Please try again.",
       });
-      clearAuthError();
-      setIsSubmitting(false);
+      registerMutation.reset();
     }
-  }, [error, clearAuthError]);
+  }, [registerMutation.isError, registerMutation.error]);
 
   // initialize the form using react-hook-form
   const {
@@ -65,7 +78,6 @@ export default function RegisterPage() {
 
   // handle form submission
   const onSubmit = async (data) => {
-    setIsSubmitting(true);
     try {
       // Prepare user data for registration
       const userData = {
@@ -75,7 +87,7 @@ export default function RegisterPage() {
         role: "user", // Default role for new registrations
       };
 
-      await createUser(userData);
+      await registerMutation.mutateAsync(userData);
     } catch (error) {
       // Error is handled by the useEffect above
       console.error("Registration error:", error);
@@ -180,13 +192,13 @@ export default function RegisterPage() {
               {/* submit button */}
               <input
                 type="submit"
-                value={isSubmitting ? "Signing Up..." : "Sign Up"}
+                value={registerMutation.isPending ? "Signing Up..." : "Sign Up"}
                 className={`text-center w-full py-3 text-white rounded cursor-pointer transition duration-300 ${
-                  isValid && !isSubmitting
+                  isValid && !registerMutation.isPending
                     ? "bg-[#D1A054] hover:bg-red-700"
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
-                disabled={!isValid || isSubmitting}
+                disabled={!isValid || registerMutation.isPending}
               />
 
               {/* redirect to login */}

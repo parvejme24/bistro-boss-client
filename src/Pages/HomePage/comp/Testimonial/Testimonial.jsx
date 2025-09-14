@@ -35,30 +35,30 @@ export default function Testimonial() {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-        }
+        },
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
-        }
+        },
       },
       {
         breakpoint: 1024,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
-        }
-      }
-    ]
+        },
+      },
+    ],
   };
 
   return (
     <div className="py-20">
       <SectionHeader title={"Testimonial"} subTitle={"Client Feedback"} />
 
-      <div className="container mx-auto pt-14">
+      <div className="container mx-auto max-w-7xl px-5 pt-14">
         <Slider {...settings} className="">
           {reviews?.map((review) => (
             <div key={review._id} className="px-2">
