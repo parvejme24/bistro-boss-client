@@ -1,13 +1,10 @@
-import React from "react";
-import Topbar from "../Pages/Dashboard/Topbar";
-import Sidebar from "../Pages/Dashboard/Sidebar";
 import { Outlet } from "react-router-dom";
+import DashboardSidebar from "../Components/Shared/DashboardSidebar/DashboardSidebar";
 
 export default function DashboardLayout() {
   return (
     <div>
-      <Topbar />
-      <Sidebar />
+      <DashboardSidebar />
       <Outlet />
     </div>
   );

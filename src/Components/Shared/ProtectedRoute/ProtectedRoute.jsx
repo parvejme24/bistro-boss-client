@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { AuthContext } from '../../../Provider/AuthProvider';
+import { useContext } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../../../Provider/AuthProvider";
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
-  const { user, isAuthenticated, loading, isInitialized } = useContext(AuthContext);
+  const { user, isAuthenticated, loading, isInitialized } =
+    useContext(AuthContext);
   const location = useLocation();
 
   // Show loading spinner while checking authentication or during initialization
@@ -27,17 +28,20 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   if (allowedRoles.length > 0) {
     // Normalize role to lowercase to match backend enum
     const normalizedUserRole = (user.role || "customer").toLowerCase();
-    const normalizedAllowedRoles = allowedRoles.map(role => role.toLowerCase());
-    
+    const normalizedAllowedRoles = allowedRoles.map((role) =>
+      role.toLowerCase()
+    );
+
     if (!normalizedAllowedRoles.includes(normalizedUserRole)) {
       // Redirect to appropriate dashboard based on user role
       const roleRoutes = {
-        admin: '/dashboard/admin',
-        chef: '/dashboard/chef',
-        customer: '/dashboard/customer'
+        admin: "/dashboard/admin",
+        chef: "/dashboard/chef",
+        customer: "/dashboard/customer",
       };
-      
-      const redirectPath = roleRoutes[normalizedUserRole] || '/dashboard/customer';
+
+      const redirectPath =
+        roleRoutes[normalizedUserRole] || "/dashboard/customer";
       return <Navigate to={redirectPath} replace />;
     }
   }
@@ -45,4 +49,4 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   return children;
 };
 
-export default ProtectedRoute; 
+export default ProtectedRoute;

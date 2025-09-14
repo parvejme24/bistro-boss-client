@@ -14,6 +14,12 @@ import MenuDetailsPage from "../Pages/MenuDetailsPage.jsx/MenuDetailsPage";
 import ChefDetailsPage from "../Pages/ChefDetailsPage/ChefDetailsPage";
 import AboutPage from "../Pages/AboutPage/AboutPage";
 import ContactPage from "../Pages/ContactPage/ContactPage";
+import OverviewPage from "../Pages/Dashboard/Overview/OverviewPage";
+import ProfilePage from "../Pages/Dashboard/Profile/ProfilePage";
+import MyOrders from "../Pages/Dashboard/MyOrders/MyOrders";
+import AllUser from "../Pages/Dashboard/AllUser/AllUser";
+import AddMenuPage from "../Pages/Dashboard/AddMenu/AddMenuPage";
+import ManageOrders from "../Pages/Dashboard/ManageOrders/ManageOrders";
 
 const router = createBrowserRouter([
   {
@@ -21,53 +27,20 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: "/",
-        element: <HomePage />,
-      },
-      {
-        path: "about",
-        element: <AboutPage />,
-      },
-      {
-        path: "menu",
-        element: <MenuPage />,
-      },
-      {
-        path: "menu-details/:id",
-        element: <MenuDetailsPage />,
-      },
-      {
-        path: "chef",
-        element: <ChefPage />,
-      },
-      {
-        path: "chef-details/:id",
-        element: <ChefDetailsPage />,
-      },
-      {
-        path: "blog",
-        element: <BlogPage />,
-      },
-      {
-        path: "blog-details/:id",
-        element: <BlogDetailsPage />,
-      },
-      {
-        path: "contact",
-        element: <ContactPage />,
-      },
-      {
-        path: "login",
-        element: <LoginPage />,
-      },
-      {
-        path: "register",
-        element: <RegisterPage />,
-      },
+      { path: "/", element: <HomePage /> },
+      { path: "about", element: <AboutPage /> },
+      { path: "menu", element: <MenuPage /> },
+      { path: "menu-details/:id", element: <MenuDetailsPage /> },
+      { path: "chef", element: <ChefPage /> },
+      { path: "chef-details/:id", element: <ChefDetailsPage /> },
+      { path: "blog", element: <BlogPage /> },
+      { path: "blog-details/:id", element: <BlogDetailsPage /> },
+      { path: "contact", element: <ContactPage /> },
+      { path: "login", element: <LoginPage /> },
+      { path: "register", element: <RegisterPage /> },
     ],
   },
-  // Dashboard routes with DashboardLayout and ProtectedRoute
+  // Dashboard routes should be a separate object
   {
     path: "/dashboard",
     element: (
@@ -76,7 +49,18 @@ const router = createBrowserRouter([
       // </ProtectedRoute>
     ),
     errorElement: <ErrorPage />,
-    children: [],
+    children: [
+      // admin only
+      { path: "overview", element: <OverviewPage /> },
+      { path: "menu", element: <MenuPage /> }, // admin and chef both can access
+      { path: "add-menu", element: <AddMenuPage /> }, // admin and chef both can access
+      { path: "users", element: <AllUser /> },
+      { path: "manage-orders", element: <ManageOrders /> },
+
+      // customers
+      { path: "profile", element: <ProfilePage /> },
+      { path: "myOrders", element: <MyOrders /> },
+    ],
   },
 ]);
 
