@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "642c155b2c4774f05c36eeaa",
+    "name": "Haddock",
+    "image": "https://cristianonew.ukrdevs.com/wp-content/uploads/2016/08/product-1-370x247.jpg",
+    "category": "salad",
+    "price": 14.7,
+    "quantity": 2
+  },
+  {
+    "_id": "642c155b2c4774f05c36ee7c",
+    "name": "Escalope de Veau",
+    "image": "https://cristianonew.ukrdevs.com/wp-content/uploads/2016/08/product-5-370x247.jpg",
+    "category": "popular",
+    "price": 14.5,
+    "quantity": 1
+  },
+  {
+    "_id": "642c155b2c4774f05c36ee88",
+    "name": "Escalope de Veau",
+    "image": "https://cristianonew.ukrdevs.com/wp-content/uploads/2016/08/product-2-370x247.jpg",
+    "category": "dessert",
+    "price": 12.5,
+    "quantity": 3
+  },
+  {
+    "_id": "642c155b2c4774f05c36eea6",
+    "name": "Chicken and Walnut Salad",
+    "image": "https://cristianonew.ukrdevs.com/wp-content/uploads/2016/08/product-3-370x247.jpg",
+    "category": "salad",
+    "price": 13.5,
+    "quantity": 1
+  },
+  {
+    "_id": "642c155b2c4774f05c36ee9e",
+    "name": "Breton Fish Stew",
+    "image": "https://cristianonew.ukrdevs.com/wp-content/uploads/2016/08/product-8-370x247.jpg",
+    "category": "pizza",
+    "price": 12.9,
+    "quantity": 2
+  }
+]

@@ -14,6 +14,10 @@ import MenuDetailsPage from "../Pages/MenuDetailsPage.jsx/MenuDetailsPage";
 import ChefDetailsPage from "../Pages/ChefDetailsPage/ChefDetailsPage";
 import AboutPage from "../Pages/AboutPage/AboutPage";
 import ContactPage from "../Pages/ContactPage/ContactPage";
+import CartPage from "../Pages/CartPage/CartPage";
+import CheckoutPage from "../Pages/CheckoutPage/CheckoutPage";
+import PaymentSuccessPage from "../Pages/PaymentSuccessPage/PaymentSuccessPage";
+import PaymentFailurePage from "../Pages/PaymentFailurePage/PaymentFailurePage";
 import OverviewPage from "../Pages/Dashboard/Overview/OverviewPage";
 import ProfilePage from "../Pages/Dashboard/Profile/ProfilePage";
 import MyOrders from "../Pages/Dashboard/MyOrders/MyOrders";
@@ -36,6 +40,10 @@ const router = createBrowserRouter([
       { path: "blog", element: <BlogPage /> },
       { path: "blog-details/:id", element: <BlogDetailsPage /> },
       { path: "contact", element: <ContactPage /> },
+      { path: "cart", element: <CartPage /> },
+      { path: "checkout", element: <CheckoutPage /> },
+      { path: "payment/success", element: <PaymentSuccessPage /> },
+      { path: "payment/failure", element: <PaymentFailurePage /> },
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
     ],
